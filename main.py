@@ -1,4 +1,4 @@
-
+from github import Github
 import discord
 from discord.ext import commands, tasks
 
@@ -11,7 +11,9 @@ TOKEN = os.environ['DISCORD_TOKEN']
 
 intents = discord.Intents().all()
 client = commands.Bot(command_prefix='!', intents=intents)
-
+GT = os.environ["GITHUB_TOKEN"]
+github = Github(GT)
+repository = github.get_user().get_repo('Rating-Bot-Data')
 
 @client.event
 async def on_ready():
@@ -53,6 +55,19 @@ async def hourlyCheck():
     await timer_hourlyCheck(client)
     pass
 
+@tasks.loop(seconds=60.0)
+async def backupCheck():
+    print("Backing up all of the files!")
+    for fl in os.listdir():
+
+        if not fl.endswith(".py"):
+            content = open(fl).read()
+            try:
+                file = repository.get_contents(fl)
+                repository.update_file(file.path, "NEW update", content, file.sha)
+            except Exception:
+                repository.create_file(fl, "NEW file", content)
+
 
 @client.event
 async def on_member_join(member):
@@ -79,6 +94,12 @@ async def getMonthlyRatingCommand(ctx):
     await command_getMonthlyRating(ctx)
 
 
-
-
+print("Getting all files from github")
+for fl in os.listdir():
+    if not fl.endswith(".py"):
+        try:
+            file = repository.get_contents(fl)
+            open(fl,'wb').write(file.decoded_content)
+        except Exception:
+            pass
 client.run(TOKEN)
