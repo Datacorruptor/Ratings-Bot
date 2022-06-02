@@ -10,11 +10,11 @@ intents = discord.Intents().all()
 client = commands.Bot(command_prefix='!', intents=intents)
 GT = os.environ["GITHUB_TOKEN"]
 github = Github(GT)
-repository = github.get_user().get_repo('Rating-Bot-Data')
+repository = github.get_user().get_repo('Rating-Bot-Data-Beta')
 print("Getting all files from github")
 for fl in os.listdir():
 
-    if not fl.endswith(".py"):
+    if not fl.endswith(".py") and not fl == '__pycache__':
         print(fl)
         try:
             file = repository.get_contents(fl)
@@ -27,7 +27,7 @@ import data
 from commands import *
 from timers import *
 from events import *
-
+#150667493931745280
 
 @client.event
 async def on_ready():
@@ -37,14 +37,17 @@ async def on_ready():
 
         await create_roles(guild)
 
-    channel = client.get_channel(977674010798219275)  # channel id here
-    await channel.send("Дядя Вова в здании!")
-
     activityCheck.start()
     secondyCheck.start()
     monthlyCheck.start()
     hourlyCheck.start()
     backupCheck.start()
+
+@client.event
+async def on_command_error(ctx, error):
+    response = str(type(error))+" "+str(error)
+
+    await ctx.send(response)
 
 
 @tasks.loop(seconds=1.0)
@@ -75,8 +78,9 @@ async def backupCheck():
     print("Backing up all of the files!")
     for fl in os.listdir():
 
-        if not fl.endswith(".py"):
-            content = open(fl).read()
+        if not fl.endswith(".py") and not fl == '__pycache__':
+            print(fl)
+            content = open(fl,encoding='utf-8').read()
             try:
                 file = repository.get_contents(fl)
                 repository.update_file(file.path, "NEW update", content, file.sha)
@@ -93,6 +97,26 @@ async def on_member_join(member):
 @client.command(name='addCredits', help='adds credits to member of "Kolkhoz"')
 async def addPointsCommand(ctx, id: int, amount: int, reason):
     await command_addPoints(ctx, id, amount, reason)
+
+@client.command(name='makeBackup')
+async def addPointsCommand(ctx):
+    if ctx.message.author.id == 547124518519308303:
+        await ctx.send("Backup started")
+        print("Backing up all of the files!")
+        for fl in os.listdir():
+
+            if not fl.endswith(".py") and not fl == '__pycache__':
+                print(fl)
+                content = open(fl, encoding='utf-8').read()
+                try:
+                    file = repository.get_contents(fl)
+                    repository.update_file(file.path, "NEW update", content, file.sha)
+                except Exception:
+                    repository.create_file(fl, "NEW file", content)
+        print("Files Backed Up!")
+        await ctx.send("Backup complete")
+    else:
+        await ctx.send("No.")
 
 
 @client.command(name='c', help='get your credits')

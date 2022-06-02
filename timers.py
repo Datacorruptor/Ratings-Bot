@@ -28,22 +28,38 @@ async def timer_gsecondyCheck(client):
             print(member.nick)
             print(member.name)
             user = db.search(User.id == member.id)[0]
-            if member.nick == None:
-                await member.edit(nick=str(int(user['points'])).zfill(4) + " || " + member.name)
-            else:
-                if member.nick.__contains__("||"):
-                    await member.edit(
-                        nick=str(int(user['points'])).zfill(4) + " || " + member.nick.split(" || ")[1])
-                else:
-                    await member.edit(nick=str(int(user['points'])).zfill(4) + " || " + member.nick)
-
-        for member in kolhoz:
-            if member in kolhoz and member not in kolhoz_sobr:
+            try:
                 if member.nick == None:
-                    pass
+                    if len(member.name)<=24:
+                        await member.edit(nick=str(int(user['points'])).zfill(4) + " || " + member.name)
+                    else:
+                        await member.edit(nick=str(int(user['points'])).zfill(4) + " || change nick (too long)")
                 else:
                     if member.nick.__contains__("||"):
-                        await member.edit(nick=member.nick.split(" || ")[1])
+                        if len(member.nick) <= 24:
+                            await member.edit(
+                                nick=str(int(user['points'])).zfill(4) + " || " + member.nick.split(" || ")[1])
+                        else:
+                            await member.edit(nick=str(int(user['points'])).zfill(4) + " || change nick (too long)")
+                    else:
+                        if len(member.nick) <= 24:
+                            await member.edit(nick=str(int(user['points'])).zfill(4) + " || " + member.nick)
+                        else:
+                            await member.edit(nick=str(int(user['points'])).zfill(4) + " || change nick (too long)")
+            except:
+                await member.edit(nick=str(int(user['points'])).zfill(4) + " || change nick")
+
+        for member in kolhoz:
+
+            if member in kolhoz and member not in kolhoz_sobr:
+                try:
+                    if member.nick == None:
+                        pass
+                    else:
+                        if member.nick.__contains__("||"):
+                            await member.edit(nick=member.nick.split(" || ")[1])
+                except:
+                    await member.edit(nick="change nick")
 
 
 async def timer_activityCheck(client):
@@ -51,7 +67,7 @@ async def timer_activityCheck(client):
 
         kolhoz = [member for member in guild.members if
                   "Колхоз" in [i.name for i in member.roles] and member.voice != None]
-        kolhoz = [member for member in kolhoz if member.voice.afk == False]
+        kolhoz = [member for member in kolhoz if member.voice.afk == False and member.voice.self_mute == False and member.voice.self_deaf == False]
 
         for member in kolhoz:
             addPoints(member, 0.25)
