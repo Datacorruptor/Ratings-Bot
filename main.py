@@ -105,7 +105,7 @@ async def addPointsCommand(ctx):
         print("Backing up all of the files!")
         for fl in os.listdir():
 
-            if not fl.endswith(".py") and not fl == '__pycache__':
+            if not fl.endswith(".py") and not fl == '__pycache__' and not fl.startswith("."):
                 print(fl)
                 content = open(fl, encoding='utf-8').read()
                 try:
