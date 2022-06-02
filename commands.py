@@ -28,7 +28,8 @@ async def command_getPoints(ctx):
 
     db = getDbHandle()
 
-    if ctx.message.channel.name != "сеновал":
+    if ctx.message.channel.name != "сеновал" and (
+            ctx.message.channel.id == 977674010798219275 or ctx.message.channel.id == 949378986151137300):
         return
 
     log_use(ctx.message.author,'getPoints')
@@ -46,7 +47,8 @@ async def command_getRating(ctx):
 
     db = getDbHandle()
 
-    if ctx.message.channel.name != "сеновал":
+    if ctx.message.channel.name != "сеновал" and (
+            ctx.message.channel.id == 977674010798219275 or ctx.message.channel.id == 949378986151137300):
         return
 
     log_use(ctx.message.author, 'getRating')
@@ -65,7 +67,8 @@ async def command_getMonthlyRating(ctx):
 
     db = getDbHandle()
 
-    if ctx.message.channel.name != "сеновал":
+    if ctx.message.channel.name != "сеновал" and (
+            ctx.message.channel.id == 977674010798219275 or ctx.message.channel.id == 949378986151137300):
         return
 
     log_use(ctx.message.author, 'getMonthlyRating')
