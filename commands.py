@@ -5,7 +5,7 @@ from utils import *
 
 
 async def command_addPoints(ctx, id: int, amount: int, reason):
-    if ctx.message.channel.name != "сеновал" and (ctx.message.channel.id == 977674010798219275 or ctx.message.channel.id == 949378986151137300):
+    if (ctx.message.channel.id != 977674010798219275 and ctx.message.channel.id != 949378986151137300) or ctx.message.channel.name != "сеновал":
         return
 
     if ctx.message.author.id == 547124518519308303 \
@@ -47,8 +47,7 @@ async def command_getRating(ctx):
 
     db = getDbHandle()
 
-    if ctx.message.channel.name != "сеновал" and (
-            ctx.message.channel.id == 977674010798219275 or ctx.message.channel.id == 949378986151137300):
+    if (ctx.message.channel.id != 977674010798219275 and ctx.message.channel.id != 949378986151137300) or ctx.message.channel.name != "сеновал":
         return
 
     log_use(ctx.message.author, 'getRating')
@@ -67,8 +66,7 @@ async def command_getMonthlyRating(ctx):
 
     db = getDbHandle()
 
-    if ctx.message.channel.name != "сеновал" and (
-            ctx.message.channel.id == 977674010798219275 or ctx.message.channel.id == 949378986151137300):
+    if (ctx.message.channel.id != 977674010798219275 and ctx.message.channel.id != 949378986151137300) or ctx.message.channel.name != "сеновал":
         return
 
     log_use(ctx.message.author, 'getMonthlyRating')
