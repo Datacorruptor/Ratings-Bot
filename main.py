@@ -1,11 +1,8 @@
 from github import Github
 import discord
 from discord.ext import commands, tasks
+import os
 
-import data
-from commands import *
-from timers import *
-from events import *
 
 TOKEN = os.environ['DISCORD_TOKEN']
 
@@ -14,6 +11,20 @@ client = commands.Bot(command_prefix='!', intents=intents)
 GT = os.environ["GITHUB_TOKEN"]
 github = Github(GT)
 repository = github.get_user().get_repo('Rating-Bot-Data')
+print("Getting all files from github")
+for fl in os.listdir():
+    if not fl.endswith(".py"):
+        try:
+            file = repository.get_contents(fl)
+            open(fl,'wb').write(file.decoded_content)
+        except Exception:
+            pass
+
+import data
+from commands import *
+from timers import *
+from events import *
+
 
 @client.event
 async def on_ready():
@@ -94,12 +105,5 @@ async def getMonthlyRatingCommand(ctx):
     await command_getMonthlyRating(ctx)
 
 
-print("Getting all files from github")
-for fl in os.listdir():
-    if not fl.endswith(".py"):
-        try:
-            file = repository.get_contents(fl)
-            open(fl,'wb').write(file.decoded_content)
-        except Exception:
-            pass
+
 client.run(TOKEN)
