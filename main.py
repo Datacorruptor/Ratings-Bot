@@ -13,9 +13,12 @@ github = Github(GT)
 repository = github.get_user().get_repo('Rating-Bot-Data')
 print("Getting all files from github")
 for fl in os.listdir():
+
     if not fl.endswith(".py"):
+        print(fl)
         try:
             file = repository.get_contents(fl)
+            print(file.decoded_content)
             open(fl,'wb').write(file.decoded_content)
         except Exception:
             pass
@@ -41,6 +44,7 @@ async def on_ready():
     secondyCheck.start()
     monthlyCheck.start()
     hourlyCheck.start()
+    backupCheck.start()
 
 
 @tasks.loop(seconds=1.0)
@@ -78,6 +82,7 @@ async def backupCheck():
                 repository.update_file(file.path, "NEW update", content, file.sha)
             except Exception:
                 repository.create_file(fl, "NEW file", content)
+    print("Files Backed Up!")
 
 
 @client.event

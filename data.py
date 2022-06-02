@@ -1,5 +1,4 @@
 import os
-import pickle
 from datetime import datetime
 from tinydb import TinyDB, Query
 
@@ -11,12 +10,12 @@ def getDbHandle():
 
 def get_month():
     month = datetime.today().month
-    if os.path.exists("month.pickle"):
-        month = pickle.load(open("month.pickle", "rb"))
+    if os.path.exists("month"):
+        month = open("month").read().strip()
     else:
-        pickle.dump(month, open('month.pickle', 'wb'), protocol=pickle.HIGHEST_PROTOCOL)
+        open("month","w").write(str(month))
     return month
 
 
 def save_month(month):
-    pickle.dump(month, open('month.pickle', 'wb'), protocol=pickle.HIGHEST_PROTOCOL)
+    open("month","w").write(str(month))

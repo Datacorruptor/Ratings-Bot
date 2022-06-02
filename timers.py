@@ -65,7 +65,7 @@ async def timer_monthlyCheck(client):
     print("month",month)
     curmonth = datetime.today().month
     print("curmonth", curmonth)
-    if curmonth != month :
+    if int(curmonth) != int(month) :
 
         for guild in client.guilds:
             month = curmonth
