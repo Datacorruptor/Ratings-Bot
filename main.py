@@ -14,7 +14,7 @@ repository = github.get_user().get_repo('Rating-Bot-Data')
 print("Getting all files from github")
 for fl in os.listdir():
 
-    if not fl.endswith(".py") and not fl == '__pycache__':
+    if not fl.endswith(".py") and not fl == '__pycache__' and not fl.startswith("."):
         print(fl)
         try:
             file = repository.get_contents(fl)
@@ -78,7 +78,7 @@ async def backupCheck():
     print("Backing up all of the files!")
     for fl in os.listdir():
 
-        if not fl.endswith(".py") and not fl == '__pycache__':
+        if not fl.endswith(".py") and not fl == '__pycache__' and not fl.startswith("."):
             print(fl)
             content = open(fl,encoding='utf-8').read()
             try:
