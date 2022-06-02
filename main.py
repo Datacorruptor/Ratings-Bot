@@ -59,18 +59,18 @@ async def activityCheck():
     pass
 
 
-@tasks.loop(seconds=60.0)
+@tasks.loop(seconds=3600.0)
 async def monthlyCheck():
     await timer_monthlyCheck(client)
     pass
 
 
-@tasks.loop(seconds=30.0)
+@tasks.loop(seconds=3600.0)
 async def hourlyCheck():
     await timer_hourlyCheck(client)
     pass
 
-@tasks.loop(seconds=60.0)
+@tasks.loop(seconds=600.0)
 async def backupCheck():
     print("Backing up all of the files!")
     for fl in os.listdir():
