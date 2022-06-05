@@ -13,7 +13,7 @@ intents = discord.Intents().all()
 client = commands.Bot(command_prefix='!', intents=intents)
 GT = os.environ["GITHUB_TOKEN"]
 github = Github(GT)
-repository = github.get_user().get_repo('Rating-Bot-Data')
+repository = github.get_user().get_repo('Rating-Bot-Data-Beta')
 print("Getting all files from github")
 logger.log("")
 for fl in os.listdir():

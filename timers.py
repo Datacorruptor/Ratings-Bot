@@ -34,13 +34,13 @@ async def timer_gsecondyCheck(client):
                             await member.edit(nick=str(int(user['points'])).zfill(4) + " || change nick (too long)")
                     else:
                         if member.nick.__contains__("||"):
-                            if len(member.nick) <= 24:
+                            if len(member.nick) <= 32:
                                 await member.edit(
                                     nick=str(int(user['points'])).zfill(4) + " || " + member.nick.split(" || ")[1])
                             else:
                                 await member.edit(nick=str(int(user['points'])).zfill(4) + " || change nick (too long)")
                         else:
-                            if len(member.nick) <= 24:
+                            if len(member.nick) <= 32:
                                 await member.edit(nick=str(int(user['points'])).zfill(4) + " || " + member.nick)
                             else:
                                 await member.edit(nick=str(int(user['points'])).zfill(4) + " || change nick (too long)")
