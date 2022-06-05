@@ -19,35 +19,39 @@ async def timer_gsecondyCheck(client):
         kolhoz = [member for member in guild.members if "Колхоз" in [i.name for i in member.roles]]
 
         for member in kolhoz_sobr:
-
-            User = Query()
-
-            if len(db.search(User.id == member.id)) == 0:
-                db.insert({'id': member.id, 'points': 0, 'monthly_points': 0})
-
-            print(member.nick)
-            print(member.name)
-            user = db.search(User.id == member.id)[0]
             try:
-                if member.nick == None:
-                    if len(member.name)<=24:
-                        await member.edit(nick=str(int(user['points'])).zfill(4) + " || " + member.name)
-                    else:
-                        await member.edit(nick=str(int(user['points'])).zfill(4) + " || change nick (too long)")
-                else:
-                    if member.nick.__contains__("||"):
-                        if len(member.nick) <= 24:
-                            await member.edit(
-                                nick=str(int(user['points'])).zfill(4) + " || " + member.nick.split(" || ")[1])
+                User = Query()
+
+                if len(db.search(User.id == member.id)) == 0:
+                    db.insert({'id': member.id, 'points': 0, 'monthly_points': 0})
+
+                user = db.search(User.id == member.id)[0]
+                try:
+                    if member.nick == None:
+                        if len(member.name)<=24:
+                            await member.edit(nick=str(int(user['points'])).zfill(4) + " || " + member.name)
                         else:
                             await member.edit(nick=str(int(user['points'])).zfill(4) + " || change nick (too long)")
                     else:
-                        if len(member.nick) <= 24:
-                            await member.edit(nick=str(int(user['points'])).zfill(4) + " || " + member.nick)
+                        if member.nick.__contains__("||"):
+                            if len(member.nick) <= 24:
+                                await member.edit(
+                                    nick=str(int(user['points'])).zfill(4) + " || " + member.nick.split(" || ")[1])
+                            else:
+                                await member.edit(nick=str(int(user['points'])).zfill(4) + " || change nick (too long)")
                         else:
-                            await member.edit(nick=str(int(user['points'])).zfill(4) + " || change nick (too long)")
-            except:
-                await member.edit(nick=str(int(user['points'])).zfill(4) + " || change nick")
+                            if len(member.nick) <= 24:
+                                await member.edit(nick=str(int(user['points'])).zfill(4) + " || " + member.nick)
+                            else:
+                                await member.edit(nick=str(int(user['points'])).zfill(4) + " || change nick (too long)")
+                except:
+                    await member.edit(nick=str(int(user['points'])).zfill(4) + " || change nick")
+            except Exception as e:
+                print("SOMETHING BAD HAPPENED!!!!!!")
+                print(str(e.with_traceback))
+                print(str(e))
+
+
 
         for member in kolhoz:
 
@@ -69,9 +73,14 @@ async def timer_activityCheck(client):
                   "Колхоз" in [i.name for i in member.roles] and member.voice != None]
         kolhoz = [member for member in kolhoz if member.voice.afk == False and member.voice.self_mute == False and member.voice.self_deaf == False]
 
+        member_string = "["
         for member in kolhoz:
             addPoints(member, 0.25)
-            log("SYSTEM#0000 added 0.25 point to " + str(member) + " for activity")
+            member_string+=str(member)+", "
+        member_string += "]"
+
+        if len(kolhoz)>0:
+            log("SYSTEM#0000 added 0.25 point to " + str(member_string) + " for activity")
 
 
 async def timer_monthlyCheck(client):

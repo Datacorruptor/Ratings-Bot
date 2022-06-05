@@ -48,6 +48,8 @@ async def clear_rank(guild,member):
         await member.remove_roles(rank)
 
 async def update_rank(rank_level,guild,member):
-    await clear_rank(guild,member)
-    await set_rank(rank_level,guild,member)
+    ranks = get_all_ranks(guild)
+    if ranks[rank_level] not in member.roles:
+        await clear_rank(guild,member)
+        await set_rank(rank_level,guild,member)
 

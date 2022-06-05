@@ -3,6 +3,29 @@ from operator import itemgetter
 from logger import *
 from utils import *
 
+async def command_addPoints_channel(ctx, id: int, amount: int, reason):
+    if (ctx.message.channel.id != 977674010798219275 and ctx.message.channel.id != 949378986151137300) or ctx.message.channel.name != "сеновал":
+        return
+
+    if ctx.message.author.id == 547124518519308303 \
+            or ctx.message.author.id == 872855017529417788 \
+            or ctx.message.author.id == 643516811635326977 \
+            or ctx.message.author.id == 248857776611131392:
+
+        channel = ctx.message.guild.get_channel(id)
+        response=""
+        member_string = "["
+        for member in channel.members:
+            res = addPoints(member, amount)
+            response += str(member) + " " + res
+            if res == "Социальные кредиты добавлены\n":
+                member_string+=str(member)+", "
+        member_string += "]"
+        log_points(ctx.message.author, member_string, amount, reason)
+
+        await ctx.send(response)
+    else:
+        await ctx.send('У вас нет прав.')
 
 async def command_addPoints(ctx, id: int, amount: int, reason):
     if (ctx.message.channel.id != 977674010798219275 and ctx.message.channel.id != 949378986151137300) or ctx.message.channel.name != "сеновал":
@@ -16,7 +39,7 @@ async def command_addPoints(ctx, id: int, amount: int, reason):
         guild = ctx.message.guild
         target = guild.get_member(id)
 
-        response = addPoints(target, amount)
+        response = str(target)+" "+addPoints(target, amount)
 
         log_points(ctx.message.author,target,amount,reason)
 
