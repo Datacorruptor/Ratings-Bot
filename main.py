@@ -18,7 +18,7 @@ print("Getting all files from github")
 logger.log("")
 for fl in os.listdir():
 
-    if not fl.endswith(".py") and not fl == '__pycache__' and not fl.startswith("."):
+    if not fl.endswith(".py") and not fl == '__pycache__' and not fl.startswith(".") and not os.path.isdir(fl):
         print(fl)
         try:
             file = repository.get_contents(fl)
@@ -82,7 +82,7 @@ async def backupCheck():
     print("Backing up all of the files!")
     for fl in os.listdir():
 
-        if not fl.endswith(".py") and not fl == '__pycache__' and not fl.startswith("."):
+        if not fl.endswith(".py") and not fl == '__pycache__' and not fl.startswith(".") and not os.path.isdir(fl):
             print(fl)
             content = open(fl,encoding='utf-8').read()
             try:
@@ -246,13 +246,13 @@ async def addPointsCommand(ctx, id: int, amount: int, reason):
     await command_addPoints(ctx, id, amount, reason)
 
 @client.command(name='makeBackup')
-async def addPointsCommand(ctx):
+async def makeBackupCommand(ctx):
     if ctx.message.author.id == 547124518519308303:
         await ctx.send("Backup started")
         print("Backing up all of the files!")
         for fl in os.listdir():
 
-            if not fl.endswith(".py") and not fl == '__pycache__' and not fl.startswith("."):
+            if not fl.endswith(".py") and not fl == '__pycache__' and not fl.startswith(".") and not os.path.isdir(fl):
                 print(fl)
                 content = open(fl, encoding='utf-8').read()
                 try:

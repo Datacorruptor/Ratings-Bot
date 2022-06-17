@@ -1,7 +1,9 @@
+import discord
 from data import *
 from operator import itemgetter
 from logger import *
 from utils import *
+from CoolNumbers import numberGenerator
 
 async def command_addPoints_channel(ctx, id: int, amount: int, reason):
     if (ctx.message.channel.id != 977674010798219275 and ctx.message.channel.id != 949378986151137300) or ctx.message.channel.name != "сеновал":
@@ -51,8 +53,7 @@ async def command_getPoints(ctx):
 
     db = getDbHandle()
 
-    if ctx.message.channel.name != "сеновал" and (
-            ctx.message.channel.id == 977674010798219275 or ctx.message.channel.id == 949378986151137300):
+    if (ctx.message.channel.name != "сеновал" and ctx.message.channel.name != "feature-test") or (ctx.message.channel.id != 977674010798219275 and ctx.message.channel.id != 949378986151137300 and ctx.message.channel.id != 985162878485139456):
         return
 
     log_use(ctx.message.author,'getPoints')
@@ -61,8 +62,16 @@ async def command_getPoints(ctx):
     rows = db.search(User.id == ctx.message.author.id)
     if len(rows) > 0:
         row = rows[0]
-        await ctx.send("У вас всего " + str(int(row['points'])) + " соц.кредитов. " +
-                       "За месяц вы набрали " + str(int(row['monthly_points'])) + " соц.кредитов.")
+
+        if int(row['points']) >= 250:
+
+            frames = numberGenerator.getImage(int(row['points']),int(row['monthly_points']),"CoolNumbers")
+            frames[0].save(str(int(row['points']))+'.gif', save_all=True, append_images=frames[1:], optimize=False,duration=160, loop=0, transparency=0, disposal=2)
+            await ctx.send("Ваши соц.кредиты",file = discord.File(str(int(row['points']))+'.gif'))
+            os.remove(str(int(row['points']))+'.gif')
+
+        else:
+            await ctx.send("У вас всего " + str(int(row['points'])) + " соц.кредитов. " + "За месяц вы набрали " + str(int(row['monthly_points'])) + " соц.кредитов.")
     else:
         await ctx.send("У вас всего 0 соц.кредитов. За месяц вы набрали 0 соц.кредитов. Вы вообще никто, и вас мы знать не знаем!")
 
