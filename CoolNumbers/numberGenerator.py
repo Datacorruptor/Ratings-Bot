@@ -16,7 +16,7 @@ def getImage(number,number2,path = ""):
         return images
 
 
-    ims = [GIFtoARRAY(Image.open(join(path,"numbers\\"+i+".gif"))) for i in str(number)]
+    ims = [GIFtoARRAY(Image.open(join(path,join("numbers",i+".gif")))) for i in str(number)]
 
 
     def combine(im1,im2):
@@ -38,7 +38,7 @@ def getImage(number,number2,path = ""):
     for i in range(1,len(ims)):
         imn = combine(imn,ims[i])
 
-    ims = [GIFtoARRAY(Image.open(join(path,"numbers\\" + i + ".gif"))) for i in str(number2)]
+    ims = [GIFtoARRAY(Image.open(join(path,join("numbers",i+".gif")))) for i in str(number2)]
     imn = combine(imn, GIFtoARRAY(Image.open(join(path,"numbers\\e2.gif"))))
 
     for i in range(len(ims)):
