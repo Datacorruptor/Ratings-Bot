@@ -13,7 +13,7 @@ intents = discord.Intents().all()
 client = commands.Bot(command_prefix='!', intents=intents)
 GT = os.environ["GITHUB_TOKEN"]
 github = Github(GT)
-repository = github.get_user().get_repo('Rating-Bot-Data')
+repository = github.get_user().get_repo('Rating-Bot-Data-Beta')
 print("Getting all files from github")
 logger.log("")
 for fl in os.listdir():
@@ -120,7 +120,6 @@ async def on_message(message):
                 msg3 = await message.channel.send("DEBUG SUCCESSFULL, CLEANING UP", delete_after=10)
                 await msg3.delete()
                 await msg2.delete()
-
 
             elif content.startswith("GRANT"):
                 content = content.split("GRANT ")[1]
@@ -229,7 +228,20 @@ async def on_message(message):
                         await message.author.create_dm()
                         await message.author.dm_channel.send(file=discord.File(buf, 'channel_info.txt'))
 
+            elif content.startswith("RESPECT"):
+                id = content.split("RESPECT ")[1]
+                for guild in client.guilds:
+                    member = guild.get_member(int(id))
 
+
+
+
+                    await member.create_dm()
+
+                    embed = discord.Embed(title="Моё Увожение, Товарищ!", description="Вы совершили прекрасный поступок, монументально влияющий на развитие колхоза, данные заслуги всегда будут поощраться, в связи с чем я, Дядя Вова, лично выражаю благодарность и моё увОжение!", color=0x00ff00)  # creates embed
+                    file = discord.File(os.path.join("Images","respect.png"), filename="respect.png")
+                    embed.set_image(url="attachment://respect.png")
+                    await member.dm_channel.send(file=file, embed=embed)
 
 
 
