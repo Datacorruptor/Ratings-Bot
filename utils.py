@@ -21,5 +21,19 @@ def addPoints(target, amount):
     else:
         return "Человек НЕ находится в колхозе\n"
 
+def addTickets(target, amount):
+    db_ticket = getDbTicketHandle()
+
+    User = Query()
+
+    if len(db_ticket.search(User.id == target.id))>0 :
+        db_ticket.update(add('tickets',amount), User.id == target.id)
+    else:
+        db_ticket.insert({'id': target.id, 'tickets': amount})
+
+    print(db_ticket.all())
+
+    return "Талоны на фотографию добавлены\n"
+
 
 

@@ -13,11 +13,10 @@ intents = discord.Intents().all()
 client = commands.Bot(command_prefix='!', intents=intents)
 GT = os.environ["GITHUB_TOKEN"]
 github = Github(GT)
-repository = github.get_user().get_repo('Rating-Bot-Data')
+repository = github.get_user().get_repo('Rating-Bot-Data-Beta')
 print("Getting all files from github")
 logger.log("")
 for fl in os.listdir():
-
     if not fl.endswith(".py") and not fl == '__pycache__' and not fl.startswith(".") and not os.path.isdir(fl):
         print(fl)
         try:
@@ -49,6 +48,13 @@ async def on_ready():
 
 @client.event
 async def on_command_error(ctx, error):
+
+    senoval = ctx.message.channel.name == "сеновал"
+    public_command =  str(ctx.message.content).startswith("!image")
+
+    if not senoval and not public_command:
+        return
+
     response = str(type(error))+" "+str(error)
 
     await ctx.send(response)
@@ -84,7 +90,7 @@ async def backupCheck():
 
         if not fl.endswith(".py") and not fl == '__pycache__' and not fl.startswith(".") and not os.path.isdir(fl):
             print(fl)
-            content = open(fl,encoding='utf-8').read()
+            content = open(fl,encoding='utf-8',errors="ignore").read()
             try:
                 file = repository.get_contents(fl)
                 repository.update_file(file.path, "NEW update", content, file.sha)
@@ -102,6 +108,20 @@ async def on_message(message):
     if message.author == client.user:
         return
     content = message.content
+
+    #this is diffusion test bot writing
+    if message.author.id == 1016938991066562650:
+        if len(message.attachments)>0 :
+
+
+            TextChannel = None
+            for guild in client.guilds:
+                for channel in guild.channels:
+                    if channel.id == int(content):
+                        TextChannel = channel
+            await TextChannel.send(message.attachments[0].url)
+
+
     if message.author.id == 547124518519308303 or message.author.id == 872855017529417788:
         if content.startswith("DEBUG"):
             await message.delete()
@@ -250,12 +270,16 @@ async def on_message(message):
 
 
 @client.command(name='addCreditsChannel', help='adds credits to all channel members')
-async def addPointsCommand(ctx, id: int, amount: int, reason):
+async def addPointsChannelCommand(ctx, id: int, amount: int, reason):
     await command_addPoints_channel(ctx, id, amount, reason)
 
 @client.command(name='addCredits', help='adds credits to member of "Kolkhoz"')
 async def addPointsCommand(ctx, id: int, amount: int, reason):
     await command_addPoints(ctx, id, amount, reason)
+
+@client.command(name='addTickets', help='adds tickets to member of "Kolkhoz"')
+async def addTicketsCommand(ctx, id: int, amount: float, reason):
+    await command_addTickets(ctx, id, amount, reason)
 
 @client.command(name='makeBackup')
 async def makeBackupCommand(ctx):
@@ -266,7 +290,7 @@ async def makeBackupCommand(ctx):
 
             if not fl.endswith(".py") and not fl == '__pycache__' and not fl.startswith(".") and not os.path.isdir(fl):
                 print(fl)
-                content = open(fl, encoding='utf-8').read()
+                content = open(fl, encoding='utf-8',errors="ignore").read()
                 try:
                     file = repository.get_contents(fl)
                     repository.update_file(file.path, "NEW update", content, file.sha)
@@ -292,6 +316,10 @@ async def getRatingCommand(ctx):
 async def getMonthlyRatingCommand(ctx):
     await command_getMonthlyRating(ctx)
 
+@client.command(name='image', help='get monthly rating')
+async def genImage(ctx, promt):
+    print(promt)
+    await command_genImage(ctx,client,promt)
 
 
 client.run(TOKEN)

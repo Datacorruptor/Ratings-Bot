@@ -3,9 +3,14 @@ from datetime import datetime
 from tinydb import TinyDB, Query
 
 db = TinyDB("db.json")
+db_ticket = TinyDB("db_token.json")
 
 def getDbHandle():
     return db
+
+
+def getDbTicketHandle():
+    return db_ticket
 
 
 def get_month():

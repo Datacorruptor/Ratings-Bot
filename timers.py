@@ -120,12 +120,15 @@ async def timer_monthlyCheck(client):
 async def timer_hourlyCheck(client):
     db = getDbHandle()
 
-    for guild in client.guilds:
+    filtered_guilds = [g for g in client.guilds if g.id != 781662768130424832]
+
+    for guild in filtered_guilds:
+        print(guild)
 
         for user in db.all():
 
             exists_somethere = False
-            for guild in client.guilds:
+            for guild in filtered_guilds:
                 if guild.get_member(user['id'])!=None:
                     exists_somethere = True
 
@@ -139,14 +142,19 @@ async def timer_hourlyCheck(client):
 
             if user['points'] < 250:
                 await clear_rank(guild, member)
+                addTickets(member,0.05)
             elif user['points'] < 500:
                 await update_rank(0, guild, member)
+                addTickets(member, 0.2)
             elif user['points'] < 1000:
                 await update_rank(1, guild, member)
+                addTickets(member, 0.3)
             elif user['points'] < 2000:
                 await update_rank(2, guild, member)
+                addTickets(member, 0.4)
             else:
                 await update_rank(3, guild, member)
+                addTickets(member, 0.5)
 
             if "Колхоз" not in [i.name for i in member.roles]:
                 await clear_rank(guild, member)
