@@ -121,7 +121,7 @@ async def timer_hourlyCheck(client):
     db = getDbHandle()
 
     filtered_guilds = [g for g in client.guilds if g.id != 781662768130424832]
-
+    member_string = "["
     for guild in filtered_guilds:
         print(guild)
 
@@ -155,8 +155,12 @@ async def timer_hourlyCheck(client):
             else:
                 await update_rank(3, guild, member)
                 addTickets(member, 0.5)
+            member_string+=str(member)+", "
+
 
             if "Колхоз" not in [i.name for i in member.roles]:
                 await clear_rank(guild, member)
                 User = Query()
                 db.remove(User.id == user['id'])
+    member_string+="]"
+    log("SYSTEM#0000 added tickets to " + str(member_string) + " for time")
