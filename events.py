@@ -1,6 +1,5 @@
 import discord
 
-
 async def event_on_member_join(member):
     await member.create_dm()
 

@@ -269,5 +269,10 @@ async def genImage(ctx, promt):
     print(promt)
     await command_genImage(ctx,client,promt)
 
+@client.command(name='transfer', help='transfers tickets to another member')
+async def transfer(ctx, id: int, amount: float):
+
+    await command_transfer(ctx,id,amount)
+
 
 client.run(TOKEN)

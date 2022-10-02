@@ -188,3 +188,37 @@ async def command_genImage(ctx,client,promt):
     else:
         await ctx.send("В данное время нейросеть не онлайн, обратитесь @Ivan_Smitt#2683")
 
+async def command_transfer(ctx,id,amount):
+
+    if amount<0 or len(str(amount))>5:
+        await ctx.send("Ненене, у нас в тестировщиках тоже умные люди сидят")
+        return
+
+    db_ticket = getDbTicketHandle()
+    log_use(ctx.message.author, 'ticket transfer ' + str(id)+" "+ str(amount))
+
+
+
+    User = Query()
+    rows = db_ticket.search(User.id == ctx.message.author.id)
+
+    if len(rows) > 0:
+        row = rows[0]
+        if float(row['tickets']) >= amount:
+
+            guild = ctx.message.guild
+            target = guild.get_member(id)
+
+            addTickets(ctx.message.author, -amount)
+            addTickets(target, amount)
+
+
+            await ctx.send(str(target)+" перевод был совершён успешно")
+
+
+        else:
+            await ctx.send("У вас не хватает талонов на фотографию!")
+    else:
+        await ctx.send("У вас не хватает талонов на фотографию!")
+
+
