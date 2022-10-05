@@ -178,7 +178,7 @@ async def command_genImage(ctx,client,promt):
             if float(row['tickets']) >= 1:
                 addTickets(ctx.message.author,-1)
                 await TextChannel.send("start image generation "+promt+" "+str(ctx.message.channel.id))
-                await ctx.send("Запрос на фотографию отправлен, как только он будет обработан, результат появится в канале")
+                await ctx.send("Запрос на фотографию отправлен, как только он будет обработан, результат появится в канале", delete_after=10)
 
 
             else:
